@@ -16,6 +16,8 @@ zabbix_export:
         Template Zabbix **SNMP** para a impressora Lexmark modelo **Lexmark CX951se (Colorida)**
         
         Inclui monitoramento dos 4 Toners (Preto, Ciano, Magenta e Amarelo) com cálculo automático de porcentagem, além de Unidade de Imagem, Kit de Manutenção e dados gerais do equipamento.
+
+        Desenvolvido por Fernando Aranha - fernando@aranha.eti.br
         
       groups:
         -
