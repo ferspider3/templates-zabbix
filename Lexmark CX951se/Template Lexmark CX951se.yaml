@@ -12,10 +12,9 @@ zabbix_export:
       description: |
         Template Zabbix SNMP para a impressora Lexmark CX951se.
         OIDs mapeadas sob medida (Toners, Unidades de Imagem e Recipiente de Resíduos) com alertas em 15%.
+        Status da impressora com Mapeamento de Valor.
 
         Desenvolvido por Fernando Aranha - fernando@aranha.eti.br
-
-        
       groups:
         -
           name: Templates
@@ -46,7 +45,9 @@ zabbix_export:
           snmp_oid: hrPrinterStatus.1
           key: prtConsoleDescription
           delay: '60'
-          value_type: CHAR
+          value_type: UNSIGNED
+          valuemap:
+            name: 'Printer Status'
           tags:
             - { tag: Application, value: Printer }
 
@@ -308,6 +309,26 @@ zabbix_export:
               expression: 'last(/SNMP - Lexmark CX951se/waste_toner_percentage)<=15'
               name: '{HOST.NAME} - Trocar Recipiente de Resíduos (Atingiu 15%)'
               priority: WARNING
+      valuemaps:
+        -
+          uuid: a0000000000040008000000000000030
+          name: 'Printer Status'
+          mappings:
+            -
+              value: '1'
+              newvalue: 'Outro'
+            -
+              value: '2'
+              newvalue: 'Desconhecido'
+            -
+              value: '3'
+              newvalue: 'Pronta / Ociosa'
+            -
+              value: '4'
+              newvalue: 'Imprimindo'
+            -
+              value: '5'
+              newvalue: 'Aquecendo'
   graphs:
     -
       uuid: a0000000000040008000000000000028
