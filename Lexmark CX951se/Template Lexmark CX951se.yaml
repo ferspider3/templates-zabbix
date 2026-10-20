@@ -6,208 +6,72 @@ zabbix_export:
       name: Templates
   templates:
     -
-      uuid: f8a4b3c2d1e0489ab000000000000000
+      uuid: a0000000000040008000000000000000
       template: 'SNMP - Lexmark CX951se'
       name: 'SNMP - Lexmark CX951se'
       description: |
-        ## Visão Geral
-        
-        Template Zabbix **SNMP** para a impressora Lexmark modelo **Lexmark CX951se (Colorida)**
-        
-        Inclui monitoramento dos 4 Toners (Preto, Ciano, Magenta e Amarelo) com cálculo automático de porcentagem, além de Unidade de Imagem, Kit de Manutenção e dados gerais do equipamento.
+        Template Zabbix SNMP para a impressora Lexmark CX951se.
+        OIDs mapeadas sob medida (Toners, Unidades de Imagem e Recipiente de Resíduos) com alertas em 15%.
 
         Desenvolvido por Fernando Aranha - fernando@aranha.eti.br
-
 
         
       groups:
         -
           name: Templates
       items:
+        # ================= INFORMAÇÕES GERAIS =================
         -
-          uuid: f8a4b3c2d1e0489ab000000000000001
-          name: 'Fabricante do Dispositivo'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.8.2.1.14.1.1
-          key: deviceManufacturer
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          status: DISABLED
-          value_type: CHAR
-          description: 'Identificação do fabricante.'
-          inventory_link: VENDOR
-          tags:
-            -
-              tag: Application
-              value: General
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000002
+          uuid: a0000000000040008000000000000001
           name: '01 Modelo do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: hrDeviceDescr.1
           key: deviceModel
-          delay: '30'
-          trends: '0'
+          delay: '60'
           value_type: CHAR
-          inventory_link: MODEL
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: f8a4b3c2d1e0489ab000000000000003
+          uuid: a0000000000040008000000000000002
           name: 'Ping da Impressora'
           type: SIMPLE
           key: 'icmpping[,5,,,]'
           delay: 120s
-          trends: 90d
           tags:
-            -
-              tag: Application
-              value: Printer
-          triggers:
-            -
-              uuid: f8a4b3c2d1e0489ab000000000000004
-              expression: 'last(/SNMP - Lexmark CX951se/icmpping[,5,,,])=0'
-              name: 'Impressora {HOST.NAME} Inacessível'
-              priority: HIGH
-              description: 'Alarme acionado se a impressora não responder a 5 pacotes de ping'
-              manual_close: 'YES'
+            - { tag: Application, value: General }
         -
-          uuid: f8a4b3c2d1e0489ab000000000000005
-          name: 'Nível da Unidade de Imagem'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.1
-          key: ImagingUnitCurrentLevel
-          delay: '60'
-          tags:
-            -
-              tag: Application
-              value: Printer
-          triggers:
-            -
-              uuid: f8a4b3c2d1e0489ab000000000000006
-              expression: 'last(/SNMP - Lexmark CX951se/ImagingUnitCurrentLevel)<22500'
-              name: '{HOST.NAME} - Substituir Unidade de Imagem'
-              priority: WARNING
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000007
-          name: 'Capacidade da Unidade de Imagem'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.1
-          key: ImagingUnitMaxCapacity
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000008
-          name: 'Porcentagem da Unidade de Imagem'
-          type: CALCULATED
-          key: imaging_unit_percentage
-          delay: '60'
-          value_type: FLOAT
-          units: '%'
-          params: 'last(//ImagingUnitCurrentLevel) / last(//ImagingUnitMaxCapacity) * 100'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000009
-          name: 'Nível do Kit de Manutenção'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.3
-          key: MaintenanceKitCurrentLevel
-          delay: '60'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f8a4b3c2d1e0489ab00000000000000a
-          name: 'Capacidade do Kit de Manutenção'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.3
-          key: MaintenanceKitMaxCapacity
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f8a4b3c2d1e0489ab00000000000000b
-          name: 'Porcentagem do Kit de Manutenção'
-          type: CALCULATED
-          key: maintenance_kit_percentage
-          delay: '60'
-          value_type: FLOAT
-          units: '%'
-          params: 'last(//MaintenanceKitCurrentLevel) / last(//MaintenanceKitMaxCapacity) * 100'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f8a4b3c2d1e0489ab00000000000000c
+          uuid: a0000000000040008000000000000003
           name: 'Status da Impressora'
           type: SNMP_AGENT
           snmp_oid: hrPrinterStatus.1
           key: prtConsoleDescription
           delay: '60'
-          history: 7d
-          trends: '0'
           value_type: CHAR
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Printer }
+
+        # ================= 1. TONER PRETO =================
         -
-          uuid: f8a4b3c2d1e0489ab00000000000000d
-          name: 'Contador de Páginas'
+          uuid: a0000000000040008000000000000004
+          name: 'Nível do Cartucho Preto'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.10.2.1.4.1.1
-          key: prtMarkerLifeCount
-          delay: '60'
-          trends: '0'
-          value_type: LOG
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f8a4b3c2d1e0489ab00000000000000e
-          name: 'Nível do Toner (PRETO)'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.2
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.1
           key: prtMarkerSuppliesLevel_Black
           delay: '60'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab00000000000000f
-          name: 'Capacidade do Toner (PRETO)'
+          uuid: a0000000000040008000000000000005
+          name: 'Capacidade do Cartucho Preto'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.2
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.1
           key: prtMarkerSuppliesMaxCapacity_Black
           delay: '3600'
-          history: 7d
-          trends: '0'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab000000000000010
-          name: 'Porcentagem do Toner (PRETO)'
+          uuid: a0000000000040008000000000000006
+          name: 'Porcentagem do Cartucho Preto'
           type: CALCULATED
           key: toner_percentage_black
           delay: '60'
@@ -215,42 +79,36 @@ zabbix_export:
           units: '%'
           params: 'last(//prtMarkerSuppliesLevel_Black) / last(//prtMarkerSuppliesMaxCapacity_Black) * 100'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
           triggers:
             -
-              uuid: f8a4b3c2d1e0489ab000000000000011
-              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_black)<10'
-              name: '{HOST.NAME} - Nível de Toner PRETO abaixo de 10%'
+              uuid: a0000000000040008000000000000029
+              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_black)<=15'
+              name: '{HOST.NAME} - Nível de Toner PRETO baixo (<= 15%)'
               priority: WARNING
+
+        # ================= 2. TONER CIANO =================
         -
-          uuid: f8a4b3c2d1e0489ab000000000000012
-          name: 'Nível do Toner (CIANO)'
+          uuid: a0000000000040008000000000000007
+          name: 'Nível do Cartucho Ciano'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.3
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.2
           key: prtMarkerSuppliesLevel_Cyan
           delay: '60'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab000000000000013
-          name: 'Capacidade do Toner (CIANO)'
+          uuid: a0000000000040008000000000000008
+          name: 'Capacidade do Cartucho Ciano'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.3
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.2
           key: prtMarkerSuppliesMaxCapacity_Cyan
           delay: '3600'
-          history: 7d
-          trends: '0'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab000000000000014
-          name: 'Porcentagem do Toner (CIANO)'
+          uuid: a0000000000040008000000000000009
+          name: 'Porcentagem do Cartucho Ciano'
           type: CALCULATED
           key: toner_percentage_cyan
           delay: '60'
@@ -258,42 +116,36 @@ zabbix_export:
           units: '%'
           params: 'last(//prtMarkerSuppliesLevel_Cyan) / last(//prtMarkerSuppliesMaxCapacity_Cyan) * 100'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
           triggers:
             -
-              uuid: f8a4b3c2d1e0489ab000000000000015
-              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_cyan)<10'
-              name: '{HOST.NAME} - Nível de Toner CIANO abaixo de 10%'
+              uuid: a000000000004000800000000000002a
+              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_cyan)<=15'
+              name: '{HOST.NAME} - Nível de Toner CIANO baixo (<= 15%)'
               priority: WARNING
+
+        # ================= 3. TONER MAGENTA =================
         -
-          uuid: f8a4b3c2d1e0489ab000000000000016
-          name: 'Nível do Toner (MAGENTA)'
+          uuid: a0000000000040008000000000000010
+          name: 'Nível do Cartucho Magenta'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.4
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.3
           key: prtMarkerSuppliesLevel_Magenta
           delay: '60'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab000000000000017
-          name: 'Capacidade do Toner (MAGENTA)'
+          uuid: a0000000000040008000000000000011
+          name: 'Capacidade do Cartucho Magenta'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.4
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.3
           key: prtMarkerSuppliesMaxCapacity_Magenta
           delay: '3600'
-          history: 7d
-          trends: '0'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab000000000000018
-          name: 'Porcentagem do Toner (MAGENTA)'
+          uuid: a0000000000040008000000000000012
+          name: 'Porcentagem do Cartucho Magenta'
           type: CALCULATED
           key: toner_percentage_magenta
           delay: '60'
@@ -301,42 +153,36 @@ zabbix_export:
           units: '%'
           params: 'last(//prtMarkerSuppliesLevel_Magenta) / last(//prtMarkerSuppliesMaxCapacity_Magenta) * 100'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
           triggers:
             -
-              uuid: f8a4b3c2d1e0489ab000000000000019
-              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_magenta)<10'
-              name: '{HOST.NAME} - Nível de Toner MAGENTA abaixo de 10%'
+              uuid: a000000000004000800000000000002b
+              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_magenta)<=15'
+              name: '{HOST.NAME} - Nível de Toner MAGENTA baixo (<= 15%)'
               priority: WARNING
+
+        # ================= 4. TONER AMARELO =================
         -
-          uuid: f8a4b3c2d1e0489ab00000000000001a
-          name: 'Nível do Toner (AMARELO)'
+          uuid: a0000000000040008000000000000013
+          name: 'Nível do Cartucho Amarelo'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.5
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.4
           key: prtMarkerSuppliesLevel_Yellow
           delay: '60'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab00000000000001b
-          name: 'Capacidade do Toner (AMARELO)'
+          uuid: a0000000000040008000000000000014
+          name: 'Capacidade do Cartucho Amarelo'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.5
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.4
           key: prtMarkerSuppliesMaxCapacity_Yellow
           delay: '3600'
-          history: 7d
-          trends: '0'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
         -
-          uuid: f8a4b3c2d1e0489ab00000000000001c
-          name: 'Porcentagem do Toner (AMARELO)'
+          uuid: a0000000000040008000000000000015
+          name: 'Porcentagem do Cartucho Amarelo'
           type: CALCULATED
           key: toner_percentage_yellow
           delay: '60'
@@ -344,121 +190,127 @@ zabbix_export:
           units: '%'
           params: 'last(//prtMarkerSuppliesLevel_Yellow) / last(//prtMarkerSuppliesMaxCapacity_Yellow) * 100'
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Toners }
           triggers:
             -
-              uuid: f8a4b3c2d1e0489ab00000000000001d
-              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_yellow)<10'
-              name: '{HOST.NAME} - Nível de Toner AMARELO abaixo de 10%'
+              uuid: a000000000004000800000000000002c
+              expression: 'last(/SNMP - Lexmark CX951se/toner_percentage_yellow)<=15'
+              name: '{HOST.NAME} - Nível de Toner AMARELO baixo (<= 15%)'
               priority: WARNING
+
+        # ================= 14. UNID. CRIAÇÃO IMAGEM PRETA =================
         -
-          uuid: f8a4b3c2d1e0489ab00000000000001e
-          name: '05 Número de Série do Dispositivo'
+          uuid: a0000000000040008000000000000019
+          name: 'Nível da Unid. Imag. Preta'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.5.1.1.17.1
-          key: serialNumber
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          value_type: CHAR
-          inventory_link: SERIALNO_A
-          tags:
-            -
-              tag: Application
-              value: General
-        -
-          uuid: f8a4b3c2d1e0489ab00000000000001f
-          name: '03 Contato do Dispositivo'
-          type: SNMP_AGENT
-          snmp_oid: 'SNMPv2-MIB::sysContact.0'
-          key: sysContact
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          value_type: CHAR
-          description: 'Identificação textual do contato do dispositivo.'
-          inventory_link: CONTACT
-          tags:
-            -
-              tag: Application
-              value: General
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000020
-          name: 'Descrição do Dispositivo'
-          type: SNMP_AGENT
-          snmp_oid: 'SNMPv2-MIB::sysDescr.0'
-          key: sysDescr
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          status: DISABLED
-          value_type: CHAR
-          inventory_link: HARDWARE
-          tags:
-            -
-              tag: Application
-              value: General
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000021
-          name: '02 Localização do Dispositivo'
-          type: SNMP_AGENT
-          snmp_oid: 'SNMPv2-MIB::sysLocation.0'
-          key: sysLocation
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          value_type: CHAR
-          description: 'A localização física deste nó.'
-          inventory_link: LOCATION
-          tags:
-            -
-              tag: Application
-              value: General
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000022
-          name: '04 Nome do Dispositivo'
-          type: SNMP_AGENT
-          snmp_oid: 'SNMPv2-MIB::sysName.0'
-          key: sysName
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          value_type: CHAR
-          description: 'Nome administrativamente atribuído a este dispositivo.'
-          inventory_link: NAME
-          tags:
-            -
-              tag: Application
-              value: General
-        -
-          uuid: f8a4b3c2d1e0489ab000000000000023
-          name: '06 Tempo de Atividade (Uptime)'
-          type: SNMP_AGENT
-          snmp_oid: 'DISMAN-EVENT-MIB::sysUpTimeInstance'
-          key: sysUpTime
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.14
+          key: ImagUnit_Black_Level
           delay: '60'
-          units: uptime
-          description: 'Tempo desde que a máquina foi ligada/reiniciada.'
-          preprocessing:
-            -
-              type: MULTIPLIER
-              parameters:
-                - '0.01'
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: Imaging }
+        -
+          uuid: a0000000000040008000000000000020
+          name: 'Capacidade da Unid. Imag. Preta'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.14
+          key: ImagUnit_Black_Capacity
+          delay: '3600'
+          tags:
+            - { tag: Application, value: Imaging }
+        -
+          uuid: a0000000000040008000000000000021
+          name: 'Porcentagem Unid. Imag. Preta'
+          type: CALCULATED
+          key: imag_unit_black_percentage
+          delay: '60'
+          value_type: FLOAT
+          units: '%'
+          params: 'last(//ImagUnit_Black_Level) / last(//ImagUnit_Black_Capacity) * 100'
+          tags:
+            - { tag: Application, value: Imaging }
           triggers:
             -
-              uuid: f8a4b3c2d1e0489ab000000000000024
-              expression: 'change(/SNMP - Lexmark CX951se/sysUpTime)<0'
-              name: 'Impressora {HOST.NAME} reiniciada'
-              priority: INFO
+              uuid: a000000000004000800000000000002d
+              expression: 'last(/SNMP - Lexmark CX951se/imag_unit_black_percentage)<=15'
+              name: '{HOST.NAME} - Unidade de Imagem Preta no fim (<= 15%)'
+              priority: WARNING
+
+        # ================= 15. KIT GERAÇÃO IMAGEM COLOR =================
+        -
+          uuid: a0000000000040008000000000000022
+          name: 'Nível do Kit Imag. Coloridas'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.15
+          key: ImagKit_Color_Level
+          delay: '60'
+          tags:
+            - { tag: Application, value: Imaging }
+        -
+          uuid: a0000000000040008000000000000023
+          name: 'Capacidade Kit Imag. Coloridas'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.15
+          key: ImagKit_Color_Capacity
+          delay: '3600'
+          tags:
+            - { tag: Application, value: Imaging }
+        -
+          uuid: a0000000000040008000000000000024
+          name: 'Porcentagem Kit Imag. Coloridas'
+          type: CALCULATED
+          key: imag_kit_color_percentage
+          delay: '60'
+          value_type: FLOAT
+          units: '%'
+          params: 'last(//ImagKit_Color_Level) / last(//ImagKit_Color_Capacity) * 100'
+          tags:
+            - { tag: Application, value: Imaging }
+          triggers:
+            -
+              uuid: a000000000004000800000000000002e
+              expression: 'last(/SNMP - Lexmark CX951se/imag_kit_color_percentage)<=15'
+              name: '{HOST.NAME} - Kit de Imagem Colorida no fim (<= 15%)'
+              priority: WARNING
+
+        # ================= 10. RESÍDUOS DE TONER =================
+        -
+          uuid: a0000000000040008000000000000025
+          name: 'Nível Recipiente de Resíduos'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.10
+          key: WasteToner_Level
+          delay: '60'
+          tags:
+            - { tag: Application, value: Maintenance }
+        -
+          uuid: a0000000000040008000000000000026
+          name: 'Capacidade Recipiente Resíduos'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.10
+          key: WasteToner_Capacity
+          delay: '3600'
+          tags:
+            - { tag: Application, value: Maintenance }
+        -
+          uuid: a0000000000040008000000000000027
+          name: 'Porcentagem Recipiente Resíduos'
+          type: CALCULATED
+          key: waste_toner_percentage
+          delay: '60'
+          value_type: FLOAT
+          units: '%'
+          params: 'last(//WasteToner_Level) / last(//WasteToner_Capacity) * 100'
+          tags:
+            - { tag: Application, value: Maintenance }
+          triggers:
+            -
+              uuid: a000000000004000800000000000002f
+              expression: 'last(/SNMP - Lexmark CX951se/waste_toner_percentage)<=15'
+              name: '{HOST.NAME} - Trocar Recipiente de Resíduos (Atingiu 15%)'
+              priority: WARNING
   graphs:
     -
-      uuid: f8a4b3c2d1e0489ab000000000000025
+      uuid: a0000000000040008000000000000028
       name: 'Níveis dos Toners (Porcentagem)'
       graph_items:
         -
