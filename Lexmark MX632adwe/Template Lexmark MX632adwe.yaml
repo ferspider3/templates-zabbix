@@ -1,13 +1,12 @@
 zabbix_export:
   version: '6.0'
-  date: '2021-11-21T21:43:26Z'
   groups:
     -
       uuid: 7df96b18c230490a9a0a9e2307226338
       name: Templates
   templates:
     -
-      uuid: 50a553a7ef6443078a82fa79d862649b
+      uuid: d1c2b3a4e5f647a18000000000000000
       template: 'SNMP - Lexmark MX632adwe'
       name: 'SNMP - Lexmark MX632adwe'
       description: |
@@ -15,18 +14,18 @@ zabbix_export:
         
         Template Zabbix **SNMP** para a impressora Lexmark modelo **Lexmark MX632adwe**
         
-        Nota: Este template foi traduzido para Português e modificado para incluir os valores de Toner, Unidade de Imagem e Kit de Manutenção em Porcentagem (%).
+        Nota: Este template foi traduzido para Português e modificado para incluir os valores de Toner, Unidade de Imagem e Kit de Manutenção em Porcentagem (%). Alertas configurados para <= 15%.
         
         No momento, o template monitora as informações básicas da máquina, módulos de impressão e realiza testes de ping para garantir sua disponibilidade.
 
         Desenvolvido por Fernando Aranha - fernando@aranha.eti.br
-        
       groups:
         -
           name: Templates
       items:
+        # ================= INFORMAÇÕES GERAIS =================
         -
-          uuid: 2d23aadc53fe42f88e426f5cdf8b2b53
+          uuid: d1c2b3a4e5f647a18000000000000001
           name: 'Fabricante do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: .1.3.6.1.2.1.43.8.2.1.14.1.1
@@ -39,11 +38,9 @@ zabbix_export:
           description: 'Identificação do fabricante.'
           inventory_link: VENDOR
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: c03671da59e84397a1f85c72d77da716
+          uuid: d1c2b3a4e5f647a18000000000000002
           name: '01 Modelo do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: hrDeviceDescr.1
@@ -53,186 +50,26 @@ zabbix_export:
           value_type: CHAR
           inventory_link: MODEL
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: 25609a332f11418ca3b3c8d3b3eaa511
+          uuid: d1c2b3a4e5f647a18000000000000003
           name: 'Ping da Impressora'
           type: SIMPLE
           key: 'icmpping[,5,,,]'
           delay: 120s
           trends: 90d
           tags:
-            -
-              tag: Application
-              value: Printer
+            - { tag: Application, value: Printer }
           triggers:
             -
-              uuid: 3436e095a898479b9b91c1ae5f482bc4
+              uuid: d1c2b3a4e5f647a18000000000000004
               expression: 'last(/SNMP - Lexmark MX632adwe/icmpping[,5,,,])=0'
               name: 'Impressora {HOST.NAME} Inacessível'
               priority: HIGH
               description: 'Alarme acionado se a impressora não responder a 5 pacotes de ping'
               manual_close: 'YES'
         -
-          uuid: cd2b62d405a64b319c3531a2142cb5da
-          name: 'Nível da Unidade de Imagem'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.1
-          key: ImagingUnitCurrentLevel
-          delay: '60'
-          tags:
-            -
-              tag: Application
-              value: Printer
-          triggers:
-            -
-              uuid: 6edf1830696e44798be10832ca734f22
-              expression: 'last(/SNMP - Lexmark MX632adwe/ImagingUnitCurrentLevel)<22500'
-              name: '{HOST.NAME} - Substituir Unidade de Imagem'
-              priority: WARNING
-        -
-          uuid: 7ddfbc671e0d49d4a5e9e355aae8f4ac
-          name: 'Capacidade da Unidade de Imagem'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.1
-          key: ImagingUnitMaxCapacity
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: 3a2b1c4d5e6f4a7b8c9d0e1f2a3b4c5d
-          name: 'Porcentagem da Unidade de Imagem'
-          type: CALCULATED
-          key: imaging_unit_percentage
-          delay: '60'
-          value_type: FLOAT
-          units: '%'
-          params: 'last(//ImagingUnitCurrentLevel) / last(//ImagingUnitMaxCapacity) * 100'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: 8dce7e9e34b442e7893f453cea172eda
-          name: 'Nível do Kit de Manutenção'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.3
-          key: MaintenanceKitCurrentLevel
-          delay: '60'
-          tags:
-            -
-              tag: Application
-              value: Printer
-          triggers:
-            -
-              uuid: 0705626b0bed40df8204b23862041ffd
-              expression: 'last(/SNMP - Lexmark MX632adwe/MaintenanceKitCurrentLevel)<33750'
-              name: '{HOST.NAME} - Substituir Kit de Manutenção'
-              priority: WARNING
-        -
-          uuid: e048d2e4d0634680baf1827c52ccaddd
-          name: 'Capacidade do Kit de Manutenção'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.3
-          key: MaintenanceKitMaxCapacity
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f5e6d7c8b9a041239876543210fedcba
-          name: 'Porcentagem do Kit de Manutenção'
-          type: CALCULATED
-          key: maintenance_kit_percentage
-          delay: '60'
-          value_type: FLOAT
-          units: '%'
-          params: 'last(//MaintenanceKitCurrentLevel) / last(//MaintenanceKitMaxCapacity) * 100'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: 526c585b93684d3caf5393bc6847db80
-          name: 'Status da Impressora'
-          type: SNMP_AGENT
-          snmp_oid: hrPrinterStatus.1
-          key: prtConsoleDescription
-          delay: '60'
-          history: 7d
-          trends: '0'
-          value_type: CHAR
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: 694da5875e88435ba79924c29b37e6c4
-          name: 'Contador de Páginas'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.10.2.1.4.1.1
-          key: prtMarkerLifeCount
-          delay: '60'
-          trends: '0'
-          value_type: LOG
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: 056b1e3c2d834001ae0b207fac1eb75e
-          name: 'Nível do Toner (Cartucho Preto)'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.2
-          key: prtMarkerSuppliesLevel
-          delay: '60'
-          tags:
-            -
-              tag: Application
-              value: Printer
-          triggers:
-            -
-              uuid: 94f4971925ed470e8911c638ad9e67d8
-              expression: 'last(/SNMP - Lexmark MX632adwe/prtMarkerSuppliesLevel)<8250'
-              name: '{HOST.NAME} - Nível de Toner PRETO baixo'
-              priority: WARNING
-        -
-          uuid: 8ba58124f027486caac5ab2028f5bbdf
-          name: 'Capacidade do Toner (Cartucho Preto)'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.2
-          key: prtMarkerSuppliesMaxCapacity
-          delay: '3600'
-          history: 7d
-          trends: '0'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: a1b2c3d4e5f64789b0123456789abcde
-          name: 'Porcentagem do Toner (Preto)'
-          type: CALCULATED
-          key: toner_percentage
-          delay: '60'
-          value_type: FLOAT
-          units: '%'
-          params: 'last(//prtMarkerSuppliesLevel) / last(//prtMarkerSuppliesMaxCapacity) * 100'
-          tags:
-            -
-              tag: Application
-              value: Printer
-        -
-          uuid: f2de3d519c7e453ea945468228793881
+          uuid: d1c2b3a4e5f647a18000000000000005
           name: '05 Número de Série do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: .1.3.6.1.2.1.43.5.1.1.17.1
@@ -243,11 +80,9 @@ zabbix_export:
           value_type: CHAR
           inventory_link: SERIALNO_A
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: 096793cec87945f9924201605b578a0a
+          uuid: d1c2b3a4e5f647a18000000000000006
           name: '03 Contato do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: 'SNMPv2-MIB::sysContact.0'
@@ -259,11 +94,9 @@ zabbix_export:
           description: 'Identificação textual do contato do dispositivo.'
           inventory_link: CONTACT
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: 863d14441bf14f06be40c8bcf339abff
+          uuid: d1c2b3a4e5f647a18000000000000007
           name: 'Descrição do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: 'SNMPv2-MIB::sysDescr.0'
@@ -275,11 +108,9 @@ zabbix_export:
           value_type: CHAR
           inventory_link: HARDWARE
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: bbb4e218b8fa4af384d88ae735d86e77
+          uuid: d1c2b3a4e5f647a18000000000000008
           name: '02 Localização do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: 'SNMPv2-MIB::sysLocation.0'
@@ -291,11 +122,9 @@ zabbix_export:
           description: 'A localização física deste nó (ex.: Sala de TI, 3º Andar).'
           inventory_link: LOCATION
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: d37dff8d2c6647c38ff46ecc4cbcf3c8
+          uuid: d1c2b3a4e5f647a18000000000000009
           name: '04 Nome do Dispositivo'
           type: SNMP_AGENT
           snmp_oid: 'SNMPv2-MIB::sysName.0'
@@ -307,11 +136,9 @@ zabbix_export:
           description: 'Nome administrativamente atribuído a este dispositivo.'
           inventory_link: NAME
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
         -
-          uuid: fc48c5973afe42e6a34b56d8cbf1189a
+          uuid: d1c2b3a4e5f647a1800000000000000a
           name: '06 Tempo de Atividade (Uptime)'
           type: SNMP_AGENT
           snmp_oid: 'DISMAN-EVENT-MIB::sysUpTimeInstance'
@@ -325,18 +152,176 @@ zabbix_export:
               parameters:
                 - '0.01'
           tags:
-            -
-              tag: Application
-              value: General
+            - { tag: Application, value: General }
           triggers:
             -
-              uuid: 685a747a3a00444a8e17facaa8df722a
+              uuid: d1c2b3a4e5f647a1800000000000000b
               expression: 'change(/SNMP - Lexmark MX632adwe/sysUpTime)<0'
               name: 'Impressora {HOST.NAME} reiniciada'
               priority: INFO
+        -
+          uuid: d1c2b3a4e5f647a1800000000000000c
+          name: 'Contador de Páginas'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.10.2.1.4.1.1
+          key: prtMarkerLifeCount
+          delay: '60'
+          trends: '0'
+          value_type: LOG
+          tags:
+            - { tag: Application, value: Printer }
+        -
+          uuid: d1c2b3a4e5f647a1800000000000000d
+          name: 'Status da Impressora'
+          type: SNMP_AGENT
+          snmp_oid: hrPrinterStatus.1
+          key: prtConsoleDescription
+          delay: '60'
+          value_type: UNSIGNED
+          valuemap:
+            name: 'Printer Status'
+          tags:
+            - { tag: Application, value: Printer }
+
+        # ================= TONER PRETO =================
+        -
+          uuid: d1c2b3a4e5f647a1800000000000000e
+          name: 'Nível do Toner (Cartucho Preto)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.2
+          key: prtMarkerSuppliesLevel
+          delay: '60'
+          tags:
+            - { tag: Application, value: Toners }
+        -
+          uuid: d1c2b3a4e5f647a1800000000000000f
+          name: 'Capacidade do Toner (Cartucho Preto)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.2
+          key: prtMarkerSuppliesMaxCapacity
+          delay: '3600'
+          history: 7d
+          trends: '0'
+          tags:
+            - { tag: Application, value: Toners }
+        -
+          uuid: d1c2b3a4e5f647a18000000000000010
+          name: 'Porcentagem do Toner (Preto)'
+          type: CALCULATED
+          key: toner_percentage
+          delay: '60'
+          value_type: FLOAT
+          units: '%'
+          params: 'last(//prtMarkerSuppliesLevel) / last(//prtMarkerSuppliesMaxCapacity) * 100'
+          tags:
+            - { tag: Application, value: Toners }
+          triggers:
+            -
+              uuid: d1c2b3a4e5f647a18000000000000011
+              expression: 'last(/SNMP - Lexmark MX632adwe/toner_percentage)<=15'
+              name: '{HOST.NAME} - Nível de Toner PRETO baixo (<= 15%)'
+              priority: WARNING
+
+        # ================= UNIDADE DE IMAGEM =================
+        -
+          uuid: d1c2b3a4e5f647a18000000000000012
+          name: 'Nível da Unidade de Imagem'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.1
+          key: ImagingUnitCurrentLevel
+          delay: '60'
+          tags:
+            - { tag: Application, value: Imaging }
+        -
+          uuid: d1c2b3a4e5f647a18000000000000013
+          name: 'Capacidade da Unidade de Imagem'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.1
+          key: ImagingUnitMaxCapacity
+          delay: '3600'
+          history: 7d
+          trends: '0'
+          tags:
+            - { tag: Application, value: Imaging }
+        -
+          uuid: d1c2b3a4e5f647a18000000000000014
+          name: 'Porcentagem da Unidade de Imagem'
+          type: CALCULATED
+          key: imaging_unit_percentage
+          delay: '60'
+          value_type: FLOAT
+          units: '%'
+          params: 'last(//ImagingUnitCurrentLevel) / last(//ImagingUnitMaxCapacity) * 100'
+          tags:
+            - { tag: Application, value: Imaging }
+          triggers:
+            -
+              uuid: d1c2b3a4e5f647a18000000000000015
+              expression: 'last(/SNMP - Lexmark MX632adwe/imaging_unit_percentage)<=15'
+              name: '{HOST.NAME} - Unidade de Imagem no fim (<= 15%)'
+              priority: WARNING
+
+        # ================= KIT DE MANUTENÇÃO =================
+        -
+          uuid: d1c2b3a4e5f647a18000000000000016
+          name: 'Nível do Kit de Manutenção'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.9.1.3
+          key: MaintenanceKitCurrentLevel
+          delay: '60'
+          tags:
+            - { tag: Application, value: Maintenance }
+        -
+          uuid: d1c2b3a4e5f647a18000000000000017
+          name: 'Capacidade do Kit de Manutenção'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.8.1.3
+          key: MaintenanceKitMaxCapacity
+          delay: '3600'
+          history: 7d
+          trends: '0'
+          tags:
+            - { tag: Application, value: Maintenance }
+        -
+          uuid: d1c2b3a4e5f647a18000000000000018
+          name: 'Porcentagem do Kit de Manutenção'
+          type: CALCULATED
+          key: maintenance_kit_percentage
+          delay: '60'
+          value_type: FLOAT
+          units: '%'
+          params: 'last(//MaintenanceKitCurrentLevel) / last(//MaintenanceKitMaxCapacity) * 100'
+          tags:
+            - { tag: Application, value: Maintenance }
+          triggers:
+            -
+              uuid: d1c2b3a4e5f647a18000000000000019
+              expression: 'last(/SNMP - Lexmark MX632adwe/maintenance_kit_percentage)<=15'
+              name: '{HOST.NAME} - Kit de Manutenção no fim (<= 15%)'
+              priority: WARNING
+      valuemaps:
+        -
+          uuid: d1c2b3a4e5f647a1800000000000001a
+          name: 'Printer Status'
+          mappings:
+            -
+              value: '1'
+              newvalue: 'Outro'
+            -
+              value: '2'
+              newvalue: 'Desconhecido'
+            -
+              value: '3'
+              newvalue: 'Pronta / Ociosa'
+            -
+              value: '4'
+              newvalue: 'Imprimindo'
+            -
+              value: '5'
+              newvalue: 'Aquecendo'
   graphs:
     -
-      uuid: 4df1b723c03942c1b3d09a79edde161a
+      uuid: d1c2b3a4e5f647a1800000000000001b
       name: 'Nível do Toner (Porcentagem)'
       graph_items:
         -
